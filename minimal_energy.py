@@ -3,11 +3,11 @@ from numpy import array as a
 import numpy as np
 from PIL import Image
 
-im = Image.open("image.jpg")
+im = Image.open("bendzo.jpg")
 gray = im.convert('LA')
 asnumpy_gray = np.asarray(gray)
 image = np.asarray(im)
-
+bnsdfcnsd = np.asarray(im)
 sobel_0 = [
     [-0.125, 0, 0.125],
     [-0.25, 0, 0.25],
@@ -67,9 +67,9 @@ def seam_carve_vertical(image, minimal_energy_map):
             seam[i + 1] = j + sub_array.index(min(sub_array)) - 1
 
     for i in range(len(seam)):
-        image[i] = image[i].tolist()[:seam[i]] + image[i].tolist()[seam[i] + 1:]
+        image[i] = image[i][:seam[i]] + image[i][seam[i] + 1:]
 
-    return image
+    return a([a(row, dtype=np.uint8) for row in image], dtype=np.uint8)
 
 
 def get_edges_values(input):
@@ -96,12 +96,20 @@ def dostuff(input):
     return input
 
 
-tmp = get_minimal_energy_map_vertical(get_edges_values(asnumpy_gray))
+for _ in range(100):
+    tmp = get_minimal_energy_map_vertical(get_edges_values(asnumpy_gray))
 
-tmp = dostuff(tmp)
+    tmp = dostuff(tmp)
 
-image = seam_carve_vertical(image, tmp)
+    image = seam_carve_vertical(image, tmp)
 
-out = Image.fromarray(image)
+    out = Image.fromarray(image)
+
+    image = [row.tolist() for row in image]
+
+    gray = out.convert('LA')
+    asnumpy_gray = np.asarray(gray)
+
+    asnumpy_gray = a([a([pixel[0] for pixel in row]) for row in asnumpy_gray])
 
 out.show()
