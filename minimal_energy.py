@@ -3,7 +3,7 @@ from numpy import array as a
 import numpy as np
 from PIL import Image
 
-im = Image.open("bendzo.jpg")
+im = Image.open("debug.bmp")
 gray = im.convert('LA')
 asnumpy_gray = np.asarray(gray)
 image = np.asarray(im)
@@ -67,7 +67,8 @@ def seam_carve_vertical(image, minimal_energy_map):
             seam[i + 1] = j + sub_array.index(min(sub_array)) - 1
 
     for i in range(len(seam)):
-        image[i] = image[i][:seam[i]] + image[i][seam[i] + 1:]
+        #image[i] = image[i][:seam[i]] + image[i][seam[i] + 1:]
+        image[i][seam[i]] = [255, 0, 0]
 
     return a([a(row, dtype=np.uint8) for row in image], dtype=np.uint8)
 
@@ -96,14 +97,16 @@ def dostuff(input):
     return input
 
 
-for _ in range(100):
-    tmp = get_minimal_energy_map_vertical(get_edges_values(asnumpy_gray))
+for i in range(1):
+    print(i)
+    #tmp = get_minimal_energy_map_vertical(get_edges_values(asnumpy_gray))
+    tmp = get_edges_values(asnumpy_gray)
 
     tmp = dostuff(tmp)
 
     image = seam_carve_vertical(image, tmp)
 
-    out = Image.fromarray(image)
+    out = Image.fromarray(tmp)
 
     image = [row.tolist() for row in image]
 
@@ -112,4 +115,5 @@ for _ in range(100):
 
     asnumpy_gray = a([a([pixel[0] for pixel in row]) for row in asnumpy_gray])
 
+print("done!")
 out.show()
