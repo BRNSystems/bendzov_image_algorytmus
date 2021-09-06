@@ -102,9 +102,7 @@ def dostuff(input):
 for i in range(1):
     print(i)
     #tmp = get_minimal_energy_map_vertical(get_edges_values(asnumpy_gray))
-    tmp = get_edges_values(asnumpy_gray)
-
-    tmp = dostuff(tmp)
+    tmp = dostuff(get_edges_values(asnumpy_gray))
 
     image = seam_carve_vertical(image, tmp)
 
