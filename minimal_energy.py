@@ -1,4 +1,4 @@
-import pygame
+import math
 from numpy import array as a
 import numpy as np
 from PIL import Image
@@ -77,15 +77,17 @@ def get_edges_values(input):
     img1 = np.zeros(shape=asnumpy_gray.shape)
     for y in range(1, len(img1) - 1):
         for x in range(1, len(img1[y]) - 1):
-            inx = 0.
+            inx0 = 0.
+            inx1 = 0.
             for ax in range(-1, 2):
                 for b in range(-1, 2):
                     try:
-                        inx += asnumpy_gray[y + ax][x + b] * sobel_0[ax + 1][b + 1] + asnumpy_gray[y + ax][x + b] * sobel_1[ax + 1][b + 1]
+                        inx0 += asnumpy_gray[y + ax][x + b] * sobel_0[ax + 1][b + 1]
+                        inx1 += asnumpy_gray[y + ax][x + b] * sobel_1[ax + 1][b + 1]
                     except:
                         pass
 
-            img1[y][x] = inx
+            img1[y][x] = math.sqrt(inx0 ** 2 + inx1 ** 2)
     return img1
 
 
